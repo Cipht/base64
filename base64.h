@@ -1,11 +1,13 @@
 #include <string>
 #include <vector>
+#include <cstring>
 const char base64_const[] = {"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"};
 
 std::string base64(std::string input){
 	std::string out;
 
-	for (int i=0; i <= input.size() - 3; i+=3){
+	int i;
+	for (i=0; i + 3 <= input.size(); i+=3){
 		out += base64_const[((input[i] >> 2) & 0x3f)];
 		out += base64_const[((input[i] & 0x3) << 4) + ((input[i + 1] >> 4) & 0xf)];
 		out += base64_const[((input[i + 1] & 0xf) << 2) + ((input[i + 2] & 0xc0) >> 6)];
@@ -30,9 +32,8 @@ std::string base64(std::string input){
 
 std::string base64_encode(char input[], unsigned long size){
 	std::string out;
-	if(size < 3)
-		return std::string();
-	for(int i = 0; i <= size - 3; i += 3){
+	int i;
+	for(i = 0; i + 3 <= size; i += 3){
 		out += base64_const[((input[i] >> 2) & 0x3f)];
 		out += base64_const[((input[i] & 0x3) << 4) + ((input[i + 1] >> 4) & 0xf)];
 		out += base64_const[((input[i + 1] & 0xf) << 2) + ((input[i + 2] & 0xc0) >> 6)];
@@ -89,6 +90,7 @@ std::string base64_decode_to_string(std::string input){
 		out.erase(out.end()-2, out.end());
 	}
 
+	delete[] buffer;
 	return out;
 };
 
@@ -126,5 +128,6 @@ std::vector<char> base64_decode_to_vector(std::string input){
 		out.erase(out.end() - 2, out.end());
 	}
 
+	delete[] buffer;
 	return out;
 };
